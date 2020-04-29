@@ -3,10 +3,19 @@
 # 1. Factoring a large number is way hard
 # 2. a^(k*phi(n)) % n == 1 (this is known as Fermat's little theorem)
 #    therefore a^(k*phi(n)+1) % n == a
+#    and phi(n) gives how many numbers between 1 and n-1 share no
+#    factors with n.
 # 3. Calculating phi(n) is hard unless you know the factors of n, in which case it is very easy.
-# (phi(n) is known as Euler's totient function, it is defined as the size of the set of numbers in the inteval [1,n)
-# that have no common factor with n.)
-
+#    This is because phi(p) is obviously p-1 if p is a prime number.  With that
+#    in mind, one can see why phi(pq) = (p-1)(q-1).
+# (Sidenote about modular arithmetic: a*b % n == (a%n)*(b%n) % n and (a+b) % n ==
+# (a%n) + (b%n)
+# Ex: 13*5 % 6 == 65 % 6 == 5 % 6
+#              == (13%6) * (5%6)
+#              == 1%6 * 5*6
+#              == 5%6
+#
+#
 # The idea is to take p,q, two large primes
 # then calculate n = pq
 #
@@ -14,8 +23,11 @@
 # that phi = (p-1)(q-1)
 #
 # All we have left to do is to find two things that when multiplied together make k*phi(n) + 1.
-# We start by trying to find e such that GCD(phi,e) = 1.
-# 
+# Then we will have a^(k*phi(n) + 1) % n == a^(k*phi(n))*a % n == a % n (because
+# a^(k*phi(n)) % n == 1%n.
+#
+# We start by trying to find e such that GCD(phi,e) = 1.  The idea is that
+#
 # By Euler's extended algorithm, we know that
 # for any a,b, there exist x,y such that x*a + y*b = gcd(a,b)
 # Therefore if gcd(e, phi) = 1, the algorithm will give us x,y such that
