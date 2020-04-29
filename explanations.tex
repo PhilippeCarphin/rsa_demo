@@ -18,7 +18,7 @@ RSA encryption is mostly based on these three things:
 
 
 \item Factoring a large number is way hard
-\item Euler's totient function $\phi(n)$, which says how many numbers between $0$ and $n-1$ do not share factors with $n$, is
+\item Euler's totient function $\phi(n)$, which says how many numbers between $1$ and $n-1$ do not share factors with $n$, is
 \begin{itemize}
     \item Hard to calculate if you do not know the factors of $n$
     \item Easy to calculate if you know the factors of $n$.
@@ -69,7 +69,7 @@ We will find $e,d$ such that $e\cdot d = k\phi(n) + 1$.  We will publish $e,n$ s
 
 \section{Final setup}
 
- We start by trying to find $e$ such that $\gcd{e,\phi(n)} = 1$.
+ We start by trying to find $e$ such that $\gcd(e,\phi(n)) = 1$.
  
 In my implementation, I just try different values for $e$ and check whether $\gcd(e, \phi(n)) = 1$.
 
