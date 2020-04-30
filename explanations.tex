@@ -1,13 +1,8 @@
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage[utf8]{inputenc}
+\documentclass{article} \usepackage{amsmath} \usepackage[utf8]{inputenc}
 
-\title{rsa}
-\author{Philippe Carphin}
-\date{April 2020}
+\title{rsa} \author{Philippe Carphin} \date{April 2020}
 
-\setlength{\parskip}{2mm}
-\setlength{\parindent}{0em}
+\setlength{\parskip}{2mm} \setlength{\parindent}{0em}
 \begin{document}
 
 \maketitle
@@ -18,22 +13,28 @@ RSA encryption is mostly based on these three things:
 
 
 \item Factoring a large number is way hard
-\item Euler's totient function $\phi(n)$, which says how many numbers between $1$ and $n-1$ do not share factors with $n$, is
+\item Euler's totient function $\phi(n)$, which says how many numbers between
+  $1$ and $n-1$ do not share factors with $n$, is
 \begin{itemize}
     \item Hard to calculate if you do not know the factors of $n$
     \item Easy to calculate if you know the factors of $n$.
 \end{itemize}
-\item $a^{k*\phi(n)} \equiv 1 \mod{n}$ (this is known as Fermat's little theorem).
+\item $a^{k*\phi(n)} \equiv 1 \mod{n}$ (this is known as Fermat's little
+  theorem).
 
 \end{enumerate}
-Also sidenote on modular arithmetic in math versus in computer science.  In math, we say that $11 \equiv 4 \mod{7}$ meaning that we consider them the same $\mod{7}$ and we will be considering everything $\mod{n}$.  We will consider two numbers to be equivalent $\mod{n}$ if they differ by a multiple of $n$.  The following
+Also sidenote on modular arithmetic in math versus in computer science. In math,
+we say that $11 \equiv 4 \mod{7}$ meaning that we consider them the same
+$\mod{7}$ and we will be considering everything $\mod{n}$. We will consider two
+numbers to be equivalent $\mod{n}$ if they differ by a multiple of $n$. The
+following
 \begin{align}
-    (a + kn) \cdot (b + ln) &= ab + aln + bkn + kln^2 \\
-    &= ab + (al + bk + kln)n \\
-    (a + kn) + (b + ln) &= a + b + (k+l)n
+    (a + kn) \cdot (b + ln) &= ab + aln + bkn + kln^2 \\ &= ab + (al + bk +
+  kln)n \\ (a + kn) + (b + ln) &= a + b + (k+l)n
 \end{align}
-shows that $ab \equiv (a+kn)\dot(b+ln) \mod{n}$
-This means that in modular arithmetic we can replace any of the numbers with another one that is equivalent modulo $n$ and the result will be equivalent modulo $n$.
+shows that $ab \equiv (a+kn)\dot(b+ln) \mod{n}$ This means that in modular
+arithmetic we can replace any of the numbers with another one that is equivalent
+modulo $n$ and the result will be equivalent modulo $n$.
 \begin{align}
     15 \cdot 71 \equiv 1 \cdot 1 \mod{7}
 \end{align}
@@ -42,46 +43,54 @@ For example
 \begin{align}
     15 \cdot 71 &= 1065
 \end{align}
-but if we were just interested in the result modulo $7$ we need only note that $15 \equiv 1 \mod{7}$ and $71 \equiv 1 \mod{7}$.  So the result $\mod{7}$ is just $1$.
+but if we were just interested in the result modulo $7$ we need only note that
+$15 \equiv 1 \mod{7}$ and $71 \equiv 1 \mod{7}$. So the result $\mod{7}$ is just
+$1$.
 
 \section{Initial setup and idea}
- The idea is to take $p,q$, two large primes
- then calculate \[n = pq.\]
+ The idea is to take $p,q$, two large primes then calculate \[n = pq.\]
 
- For a prime number $p$, no other numbers than $p$ itself are factors of $p$, so $\phi(p) = p-1$.  You'll have to trust me that $\phi(mn) = \phi(m)\phi(n)$.  We can therefore calculate $\phi(n) = \phi(p)\phi(q) = (p-1)(q-1)$.
+ For a prime number $p$, no other numbers than $p$ itself are factors of $p$, so
+ $\phi(p) = p-1$. You'll have to trust me that $\phi(mn) = \phi(m)\phi(n)$. We
+ can therefore calculate $\phi(n) = \phi(p)\phi(q) = (p-1)(q-1)$.
  
 
- All we have left to do is to find two things that when multiplied together make $k*\phi(n) + 1$.
- Then we will have 
+ All we have left to do is to find two things that when multiplied together make
+ $k*\phi(n) + 1$. Then we will have
 \begin{align}
-    a^{k\phi(n) + 1} &\equiv a^{k\phi(n)}\cdot a \mod{n} \\
-                     &\equiv 1 \cdot a \mod{n} \\
-                     &\equiv a \mod{n}
+    a^{k\phi(n) + 1} &\equiv a^{k\phi(n)}\cdot a \mod{n} \\ &\equiv 1 \cdot a
+    \mod{n} \\ &\equiv a \mod{n}
 \end{align}
 
-We will find $e,d$ such that $e\cdot d = k\phi(n) + 1$.  We will publish $e,n$ so that someone may take their message $m$, encrypt it by calculating $m^e \mathrm{mod}\ n$.  They will send us this $m^e$ and because we know $d$, we will be able to get $m$ back:
+We will find $e,d$ such that $e\cdot d = k\phi(n) + 1$. We will publish $e,n$ so
+that someone may take their message $m$, encrypt it by calculating $m^e
+\mathrm{mod}\ n$. They will send us this $m^e$ and because we know $d$, we will
+be able to get $m$ back:
 
 \begin{align}
-    (m^e)^d &= m^{ed} \\
-            &= m^{k\phi(n) + 1} \\
-            &\equiv m\ \mod{n}
+    (m^e)^d &= m^{ed} \\ &= m^{k\phi(n) + 1} \\ &\equiv m\ \mod{n}
 \end{align}
 
 \section{Final setup}
 
  We start by trying to find $e$ such that $\gcd(e,\phi(n)) = 1$.
  
-In my implementation, I just try different values for $e$ and check whether $\gcd(e, \phi(n)) = 1$.
+In my implementation, I just try different values for $e$ and check whether
+$\gcd(e, \phi(n)) = 1$.
 
 It is a theorem in mathematics that for any $a, b$ there exist $x, y$ such that
 \[xa + yb = \gcd(a,b).\]
 
-In our case, that means that if we have found an $e$ that has $\gcd(e, \phi(n)) = 1$, then there exists $d,k$ such that
+In our case, that means that if we have found an $e$ that has $\gcd(e, \phi(n))
+= 1$, then there exists $d,k$ such that
 \[de * k\phi(n) = 1.\]
 
 \section{Using the algorithm}
 
-We start with $p,q$ two large prime numbers.  We calculate their product $n$, then we calculate $\phi(n) = (p-1)(q-1)$ and find $e,d,k$ such that $ed + k\phi(n) = 1$ (we can see this as meaning that $ed$ is one above a multiple of $\phi(n)$, which is the important thing for us).
+We start with $p,q$ two large prime numbers. We calculate their product $n$,
+then we calculate $\phi(n) = (p-1)(q-1)$ and find $e,d,k$ such that $ed +
+k\phi(n) = 1$ (we can see this as meaning that $ed$ is one above a multiple of
+$\phi(n)$, which is the important thing for us).
 
 
 Let $m < n$ be our message.
@@ -90,11 +99,8 @@ Next $m^e \mod{n}$ is the encrypted message, lets call it $w$ (upside down $m$).
 
  To decrypt the encrypted message w, and we raise it to the power 'd'
 \begin{align}
- w^d &\equiv (m^e)^d \mod{n} \\
-     &\equiv m^(ed) \mod{n} \\
-     &\equiv m^(y*phi + 1) \mod{n} \\
-     &\equiv m^(y*phi) * m  \mod{n} \\
-     &\equiv     1     * m \mod{n} \\
-     &\equiv m \mod{n}
+ w^d &\equiv (m^e)^d \mod{n} \\ &\equiv m^(ed) \mod{n} \\ &\equiv m^(y*phi + 1)
+ \mod{n} \\ &\equiv m^(y*phi) * m \mod{n} \\ &\equiv 1 * m \mod{n} \\ &\equiv m
+ \mod{n}
 \end{align}
 \end{document}
